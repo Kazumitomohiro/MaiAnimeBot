@@ -12,7 +12,7 @@ const TOKEN = process.env.TOKEN
 const ADMINID = process.env.ADMINID
 const NHENTAIENABLE = process.env.NHENTAIENABLE
 const NHCHANNEL = process.env.NHCHANNEL
-const PREFIX = '!'
+const PREFIX = '/'
 
 const showRegex = /\<(.+?)\>/
 const seiyuuRegex = /\[(.+?)\]/
