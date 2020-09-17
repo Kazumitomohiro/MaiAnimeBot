@@ -19,6 +19,57 @@ const seiyuuRegex = /\[(.+?)\]/
 const mangaRegex = /\{(.+?)\}/
 const nhentaiNumbersRegex = /\b([0-9]){5,6}\b/
 
+function hook(channel, title, message, color, avatar) {
+
+    if (!channel) return console.log('Channel not specified.');
+    if (!title) return console.log('Title not specified.');
+    if (!message) return console.log('Message not specified.');
+    if (!color) color = 'FFFF00' ;
+    if (!avatar) avatar = 'https://cdn.discordapp.com/avatars/755416995532636160/f4ae564aefbb8a88764d918a869c25f0.png'
+
+
+    color = color.replace(/\s/g, '');
+    avatar = avatar.replace(/\s/g, '');
+
+    channel.fetchwebhooks()
+    .then(webhook => {
+        let foundhook = webhook.find('name', 'Kazumaid');
+
+        if (!foundHook) {
+            channel.createWebhook('Kazumaid', 'https://cdn.discordapp.com/avatars/755416995532636160/f4ae564aefbb8a88764d918a869c25f0.png')
+               .then(webhook => {
+                   webhook.send('', {
+                       "username": title,
+                       "avatarURL": avatar,
+                       "embeds": [{
+                           "color": parseInt(`0x${color}`),
+                           "description":message
+                       }]
+                   })
+                   .catch(error => {
+                       console.log(error);
+                       return channel.send('**Something went wrong when sending the webhook. Please check console**');
+                   })
+
+               })
+        } else {
+            foundHook.send('', {
+                "username": title,
+                "avatarURL": avatar,
+                "embeds": [{
+                    "color": parseInt(`0x${color}`),
+                    "description":message
+                }]
+            })
+            .catch(error => {
+                console.log(error);
+                return channel.send('**Something went wrong when sending the webhook. Please check console**');
+            })
+    }
+})
+
+}
+
 var verboseReverb = false
 
 client.on('ready', () => console.log('Mai is ready! <3'))
@@ -86,12 +137,26 @@ client.on('message', async message => {
             mai.handleDeleteMessage(arguments, message, guildowner, messageauthor, ADMINID)
             return
 
+        case `${PREFIX}hook`:
+            message.delete();
+            if (`${PREFIX}hook`) {
+                return hook(message.channel, 'Hook Usage', `${PREFIX}hook <title>, <message>, [HEXcolor], [avatarURL]\n\n**<> is required\n[] is optional**`,'FFFF00','https://cdn.discordapp.com/avatars/755416995532636160/f4ae564aefbb8a88764d918a869c25f0.png')
+            }
+
+            let hookArgs = message.content.slice(prefix.length + 6).split(",");
+
+            hook (message.channel, hookArgs[0], hookArgs[1], hookArgs[2], hookArgs[3]);
+
         case `${PREFIX}pin`:
             mai.handlePinMessage(arguments, message, guildowner, messageauthor, true, ADMINID)
             return
 
         case `${PREFIX}unpin`:
             mai.handlePinMessage(arguments, message, guildowner, messageauthor, false, ADMINID)
+            return
+
+        case `${PREFIX}dev` :
+            message.channel.send('Hello! My Developer is <@!427454146421981184>. This bot is under development! Stay tuned for more commands');
             return
 
         case `${PREFIX}nh`:
@@ -146,6 +211,6 @@ function escapeMarkdown(string) {
     ]
     return replacements.reduce(
         function (string, replacement) {
-            return string.replace(replacement[0], replacement[1])
+            return string.replace(replacement[0], replacement[1]);
         }, string)
 }
