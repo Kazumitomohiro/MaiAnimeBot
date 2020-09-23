@@ -14,6 +14,13 @@ const NHENTAIENABLE = process.env.NHENTAIENABLE
 const NHCHANNEL = process.env.NHCHANNEL
 const PREFIX = '/'
 
+const fs = require('fs');
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for(const file of commandFiles){
+    const command = require(`./commands/${file}`);
+    client.commands.set(command.name, command);
+}
+
 const showRegex = /\<(.+?)\>/
 const seiyuuRegex = /\[(.+?)\]/
 const mangaRegex = /\{(.+?)\}/
@@ -129,6 +136,28 @@ client.on('message', async message => {
             mai.handlePurge(arguments, message, guildowner, messageauthor, ADMINID)
             return
 
+        case `${PREFIX}help`:
+            const Help = new Discord.MessageEmbed()
+            .setColor('#FF00FF')
+            .setTitle('Help Command')
+            .setURL()
+            .setAuthor('Kazumi Tomohiro', 'https://cdn.discordapp.com/avatars/427454146421981184/2dcb466642441375036483abbeabbd37.png', ' ')
+            .setDescription('My current prefix is /')
+            .setThumbnail()
+            .addFields(
+                { name: 'test', value: 'just a test', },
+            )
+            .setTimestamp()
+            .setFooter('On Working', ' ')
+
+            channel.send(Help);
+       
+
+
+
+
+
+
         case `${PREFIX}movechat`:
             mai.handleMoveChat(arguments, message, guildowner, messageauthor, ADMINID)
             return
@@ -149,6 +178,21 @@ client.on('message', async message => {
 
         case `${PREFIX}pin`:
             mai.handlePinMessage(arguments, message, guildowner, messageauthor, true, ADMINID)
+            return
+
+        //case `${PREFIX}embed`:
+
+        case `${PREFIX}kill`: 
+            message.channel.send('Jangan bunuh orang lah jirr... punya hati kagak')
+            return
+
+        
+
+        
+
+
+        case `${PREFIX}tourney`:
+            message.channel.send('Jangan banyak nanya ah, cek <#748870638680408205>')
             return
 
         case `${PREFIX}unpin`:
