@@ -136,6 +136,8 @@ client.on('message', async message => {
             mai.handlePurge(arguments, message, guildowner, messageauthor, ADMINID)
             return
 
+        
+
         case `${PREFIX}help`:
             const Help = new Discord.MessageEmbed()
             .setColor('#FF00FF')
@@ -165,6 +167,7 @@ client.on('message', async message => {
         case `${PREFIX}delete`:
             mai.handleDeleteMessage(arguments, message, guildowner, messageauthor, ADMINID)
             return
+    
 
         case `${PREFIX}hook`:
             message.delete();
@@ -188,7 +191,9 @@ client.on('message', async message => {
 
         
 
-        
+        case `bacot`:
+            message.channel.send('idih ngegas amat bro')
+            return
 
 
         case `${PREFIX}tourney`:
